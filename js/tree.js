@@ -17,6 +17,10 @@ export default class Tree {
 	delete(value) {
 		this.root = deleteRec(this.root, value);
 	}
+
+	find(value) {
+		this.root = findRec(this.root, value);
+	}
 }
 
 function initializeArray(array) {
@@ -85,4 +89,18 @@ function deleteRec(root, value) {
 	root.value = next.value;
 	next = null;
 	return root;
+}
+
+function findRec(root, value) {
+	if (root === null || root.value === value) {
+		return root;
+	}
+	if (value > root.value) {
+		root.right = findRec(root.right, value);
+		return root;
+	}
+	if (value < root.value) {
+		root.left = findRec(root.left, value);
+		return root;
+	}
 }
