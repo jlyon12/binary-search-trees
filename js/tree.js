@@ -1,3 +1,4 @@
+/* eslint-disable import/extensions */
 /* eslint-disable no-use-before-define */
 import Node from './node.js';
 
@@ -5,6 +6,10 @@ export default class Tree {
 	constructor(array) {
 		this.array = initializeArray(array);
 		this.root = buildTree(this.array, 0, this.array.length - 1);
+	}
+
+	insert(value) {
+		this.root = insertRec(this.root, value);
 	}
 }
 
@@ -21,4 +26,17 @@ function buildTree(array, start, end) {
 	node.left = buildTree(array, start, mid - 1);
 	node.right = buildTree(array, mid + 1, end);
 	return node;
+}
+
+function insertRec(root, value) {
+	if (root === null) {
+		root = new Node(value);
+		return root;
+	}
+	if (value > root.value) {
+		root.right = insertRec(root.right, value);
+	} else if (value < root.value) {
+		root.left = insertRec(root.left, value);
+	}
+	return root;
 }
