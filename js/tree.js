@@ -1,6 +1,8 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable import/extensions */
 /* eslint-disable no-use-before-define */
 import Node from './node.js';
+import prettyPrint from './prettyPrint.js';
 
 export default class Tree {
 	constructor(array) {
@@ -10,6 +12,10 @@ export default class Tree {
 
 	insert(value) {
 		this.root = insertRec(this.root, value);
+	}
+
+	delete(value) {
+		this.root = deleteRec(this.root, value);
 	}
 }
 
@@ -38,5 +44,45 @@ function insertRec(root, value) {
 	} else if (value < root.value) {
 		root.left = insertRec(root.left, value);
 	}
+	return root;
+}
+
+function deleteRec(root, value) {
+	if (root === null) {
+		return root;
+	}
+
+	if (value > root.value) {
+		root.right = deleteRec(root.right, value);
+		return root;
+	}
+	if (value < root.value) {
+		root.left = deleteRec(root.left, value);
+		return root;
+	}
+	if (root.right === null) {
+		const temp = root.left;
+		root = null;
+		return temp;
+	}
+	if (root.left === null) {
+		const temp = root.right;
+		root = null;
+		return temp;
+	}
+	let parent = root;
+	let next = root.right;
+
+	while (next.left !== null) {
+		parent = next;
+		next = next.left;
+	}
+	if (parent !== root) {
+		parent.left = next.right;
+	} else {
+		parent.right = next.right;
+	}
+	root.value = next.value;
+	next = null;
 	return root;
 }
