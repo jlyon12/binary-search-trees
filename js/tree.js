@@ -21,6 +21,24 @@ export default class Tree {
 	find(value) {
 		this.root = findRec(this.root, value);
 	}
+
+	levelOrder() {
+		const q = [];
+		const visitedNodes = [];
+		q.push(this.root);
+
+		while (q.length) {
+			const currentNode = q.shift();
+			visitedNodes.push(currentNode.value);
+			if (currentNode.left) {
+				q.push(currentNode.left);
+			}
+			if (currentNode.right) {
+				q.push(currentNode.right);
+			}
+		}
+		return visitedNodes;
+	}
 }
 
 function initializeArray(array) {
