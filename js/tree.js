@@ -80,7 +80,7 @@ export default class Tree {
 
 	find(value, root = this.root) {
 		const node = root;
-		if (node === null) return;
+		if (node === null) return -1;
 		if (value !== node.value) {
 			return value > node.value
 				? this.find(value, node.right)
@@ -151,5 +151,12 @@ export default class Tree {
 		}
 		visitedNodes.push(node.value);
 		return visitedNodes;
+	}
+
+	height(root = this.root) {
+		if (root === null) return -1;
+		const leftHeight = this.height(root.left);
+		const rightHeight = this.height(root.right);
+		return Math.max(leftHeight, rightHeight) + 1;
 	}
 }
