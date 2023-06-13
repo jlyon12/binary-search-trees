@@ -159,4 +159,16 @@ export default class Tree {
 		const rightHeight = this.height(root.right);
 		return Math.max(leftHeight, rightHeight) + 1;
 	}
+
+	depth(nodeValue, root = this.root, depthLevel = 0) {
+		const node = this.find(nodeValue);
+		if (node === -1) return -1;
+		if (node.value === root.value) {
+			return depthLevel;
+		}
+		if (node.value < root.value) {
+			return this.depth(nodeValue, root.left, depthLevel + 1);
+		}
+		return this.depth(nodeValue, root.right, depthLevel + 1);
+	}
 }
