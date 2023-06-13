@@ -194,4 +194,9 @@ export default class Tree {
 		const diff = Math.abs(leftHeight - rightHeight);
 		return diff <= 1;
 	}
+
+	rebalance() {
+		const newArr = [...new Set(this.inOrder())];
+		this.root = this.buildTree(0, newArr.length - 1, newArr);
+	}
 }
