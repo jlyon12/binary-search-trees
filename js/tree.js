@@ -187,4 +187,11 @@ export default class Tree {
 		}
 		return this.depth(nodeValue, root.right, depthLevel + 1);
 	}
+
+	isBalanced(root = this.root) {
+		const leftHeight = this.height(root.left);
+		const rightHeight = this.height(root.right);
+		const diff = Math.abs(leftHeight - rightHeight);
+		return diff <= 1;
+	}
 }
