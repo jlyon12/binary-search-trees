@@ -22,7 +22,7 @@ export default class Tree {
 		this.root = findRec(this.root, value);
 	}
 
-	levelOrder() {
+	levelOrder(callback) {
 		const q = [];
 		const visitedNodes = [];
 		q.push(this.root);
@@ -35,6 +35,9 @@ export default class Tree {
 			}
 			if (currentNode.right) {
 				q.push(currentNode.right);
+			}
+			if (callback) {
+				callback(currentNode);
 			}
 		}
 		return visitedNodes;
