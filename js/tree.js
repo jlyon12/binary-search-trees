@@ -6,20 +6,87 @@ import prettyPrint from './prettyPrint.js';
 
 export default class Tree {
 	constructor(array) {
-		this.array = initializeArray(array);
-		this.root = buildTree(this.array, 0, this.array.length - 1);
+		this.array = this.initializeArray(array);
+		this.root = this.buildTree(0, this.array.length - 1, this.array);
 	}
 
-	insert(value) {
-		this.root = insertRec(this.root, value);
+	initializeArray(array = this.array) {
+		return [...new Set(array.sort((a, b) => (a > b ? 1 : -1)))];
 	}
 
-	delete(value) {
-		this.root = deleteRec(this.root, value);
+	buildTree(start, end, array = this.array) {
+		if (start > end) {
+			return null;
+		}
+		const mid = parseInt((start + end) / 2, 10);
+		const node = new Node(array[mid]);
+		node.left = this.buildTree(start, mid - 1, array);
+		node.right = this.buildTree(mid + 1, end, array);
+		return node;
 	}
 
-	find(value) {
-		this.root = findRec(this.root, value);
+	insert(value, root = this.root) {
+		if (root === null) {
+			root = new Node(value);
+			return root;
+		}
+		if (value > root.value) {
+			root.right = this.insert(value, root.right);
+		} else if (value < root.value) {
+			root.left = this.insert(value, root.left);
+		}
+		return root;
+	}
+
+	delete(value, root = this.root) {
+		if (root === null) {
+			return root;
+		}
+
+		if (value > root.value) {
+			root.right = this.delete(value, root.right);
+			return root;
+		}
+		if (value < root.value) {
+			root.left = this.delete(value, root.left);
+			return root;
+		}
+		if (root.right === null) {
+			const temp = root.left;
+			root = null;
+			return temp;
+		}
+		if (root.left === null) {
+			const temp = root.right;
+			root = null;
+			return temp;
+		}
+		let parent = root;
+		let next = root.right;
+
+		while (next.left !== null) {
+			parent = next;
+			next = next.left;
+		}
+		if (parent !== root) {
+			parent.left = next.right;
+		} else {
+			parent.right = next.right;
+		}
+		root.value = next.value;
+		next = null;
+		return root;
+	}
+
+	find(value, root = this.root) {
+		const node = root;
+		if (node === null) return;
+		if (value !== node.value) {
+			return value > node.value
+				? this.find(value, node.right)
+				: this.find(value, node.left);
+		}
+		return node;
 	}
 
 	levelOrder(callback) {
@@ -84,87 +151,5 @@ export default class Tree {
 		}
 		visitedNodes.push(node.value);
 		return visitedNodes;
-	}
-}
-
-function initializeArray(array) {
-	return [...new Set(array.sort((a, b) => (a > b ? 1 : -1)))];
-}
-
-function buildTree(array, start, end) {
-	if (start > end) {
-		return null;
-	}
-	const mid = parseInt((start + end) / 2, 10);
-	const node = new Node(array[mid]);
-	node.left = buildTree(array, start, mid - 1);
-	node.right = buildTree(array, mid + 1, end);
-	return node;
-}
-
-function insertRec(root, value) {
-	if (root === null) {
-		root = new Node(value);
-		return root;
-	}
-	if (value > root.value) {
-		root.right = insertRec(root.right, value);
-	} else if (value < root.value) {
-		root.left = insertRec(root.left, value);
-	}
-	return root;
-}
-
-function deleteRec(root, value) {
-	if (root === null) {
-		return root;
-	}
-
-	if (value > root.value) {
-		root.right = deleteRec(root.right, value);
-		return root;
-	}
-	if (value < root.value) {
-		root.left = deleteRec(root.left, value);
-		return root;
-	}
-	if (root.right === null) {
-		const temp = root.left;
-		root = null;
-		return temp;
-	}
-	if (root.left === null) {
-		const temp = root.right;
-		root = null;
-		return temp;
-	}
-	let parent = root;
-	let next = root.right;
-
-	while (next.left !== null) {
-		parent = next;
-		next = next.left;
-	}
-	if (parent !== root) {
-		parent.left = next.right;
-	} else {
-		parent.right = next.right;
-	}
-	root.value = next.value;
-	next = null;
-	return root;
-}
-
-function findRec(root, value) {
-	if (root === null || root.value === value) {
-		return root;
-	}
-	if (value > root.value) {
-		root.right = findRec(root.right, value);
-		return root;
-	}
-	if (value < root.value) {
-		root.left = findRec(root.left, value);
-		return root;
 	}
 }
