@@ -42,6 +42,49 @@ export default class Tree {
 		}
 		return visitedNodes;
 	}
+
+	// 	Inorder => Left, Root, Right.
+	inOrder(callback, node = this.root, visitedNodes = []) {
+		if (node === null) {
+			return;
+		}
+		this.inOrder(callback, node.left, visitedNodes);
+		if (callback) {
+			callback(node);
+		}
+		visitedNodes.push(node.value);
+
+		this.inOrder(callback, node.right, visitedNodes);
+		return visitedNodes;
+	}
+
+	// Preorder => Root, Left, Right.
+	preOrder(callback, node = this.root, visitedNodes = []) {
+		if (node === null) {
+			return;
+		}
+		if (callback) {
+			callback(node);
+		}
+		visitedNodes.push(node.value);
+		this.preOrder(callback, node.left, visitedNodes);
+		this.preOrder(callback, node.right, visitedNodes);
+		return visitedNodes;
+	}
+
+	// Post order => Left, Right, Root.
+	postOrder(callback, node = this.root, visitedNodes = []) {
+		if (node === null) {
+			return;
+		}
+		this.postOrder(callback, node.left, visitedNodes);
+		this.postOrder(callback, node.right, visitedNodes);
+		if (callback) {
+			callback(node);
+		}
+		visitedNodes.push(node.value);
+		return visitedNodes;
+	}
 }
 
 function initializeArray(array) {
